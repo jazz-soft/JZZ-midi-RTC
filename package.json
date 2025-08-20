@@ -1,7 +1,7 @@
 {
   "name": "jzz-midi-rtc",
   "version": "0.0.0",
-  "description": "MIDI via WebRTC",
+  "description": "coming soon...",
   "main": "javascript/JZZ.midi.RTC.js",
   "scripts": {
     "test": "nyc mocha",
@@ -9,8 +9,6 @@
     "coverage": "nyc report --reporter=lcov"
   },
   "keywords": [
-    "midi",
-    "webrtc"
   ],
   "author": "jazz-soft (https://jazz-soft.net/)",
   "dependencies": {
