@@ -22,6 +22,25 @@
     var inputs = [];
     var outputs = [];
 
+    const channel = rtc.createDataChannel('MIDI');
+    channel.addEventListener('open', function(evt) {
+      channel.send("Hi you!");
+    });
+    channel.addEventListener('message', function(evt) {
+      console.log('local:', evt.data);
+    });
+
+    rtc.addEventListener('datachannel', function(evt) {
+      const channel = evt.channel;
+      if (channel.label != 'MIDI') return;
+      channel.addEventListener('open', function(evt) {
+        channel.send("Hi back!");
+      });
+      channel.addEventListener('message', function(evt) {
+        console.log('remote:', evt.data);
+      });
+    });
+
     self.addMidiIn = function(name, widget) {
     };
     self.addMidiOut = function(name, widget) {
