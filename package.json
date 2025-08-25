@@ -17,7 +17,7 @@
     "jzz": "^1.9.3"
   },
   "devDependencies": {
-    "eslint": "^9.33.0",
+    "eslint": "^9.34.0",
     "grunt": "^1.6.1",
     "grunt-contrib-jshint": "^3.2.0",
     "grunt-contrib-uglify": "^5.2.2",
