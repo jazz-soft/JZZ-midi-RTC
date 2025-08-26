@@ -20,12 +20,17 @@
     this.outs = {};
     this.inputs = [];
     this.outputs = [];
+    this.rins = {};
+    this.routs = {};
+    this.rinputs = [];
+    this.routputs = [];
   }
 
-  RTC.prototype.connect = function(rtc) {
+  RTC.prototype.connect = function(rtc, pref) {
     var self = this;
     var chan = rtc.createDataChannel('MIDI');
     this.chan = chan;
+    this.pref = pref || 'WebRTC';
     chan.addEventListener('open', function(evt) {
       _send(self, _info(self));
     });
@@ -44,8 +49,18 @@
     rtc.addEventListener('datachannel', function(evt) {
       const channel = evt.channel;
       if (channel.label != 'MIDI') return;
-      channel.addEventListener('open', function(evt) {
-        //channel.send("Hi back!");
+      channel.addEventListener('close', function() {
+        var i;
+        for (i = 0; i < self.rinputs.length; i++) {
+          self.rins[self.rinputs[i]].disconnect();
+          JZZ.removeMidiIn(self.pref + ' - ' + self.rinputs[i]);
+        }
+        for (i = 0; i < self.routputs.length; i++) {
+          self.routs[self.routputs[i]].disconnect();
+          JZZ.removeMidiOut(self.pref + ' - ' + self.routputs[i]);
+        }
+        self.rins = {}; self.routs = {};
+        self.rinputs = []; self.routputs = [];
       });
       channel.addEventListener('message', function(evt) {
         console.log(evt.data);
