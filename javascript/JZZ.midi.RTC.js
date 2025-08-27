@@ -16,21 +16,24 @@
   if (JZZ.RTC) return;
 
   function RTC() {
+    // for remote client
     this.ins = {};
     this.outs = {};
     this.inputs = [];
     this.outputs = [];
-    this.rins = {};
-    this.routs = {};
-    this.rinputs = [];
-    this.routputs = [];
   }
 
-  RTC.prototype.connect = function(rtc, pref) {
+  RTC.prototype.connect = function(rtc, str) {
     var self = this;
     var chan = rtc.createDataChannel('MIDI');
     this.chan = chan;
-    this.pref = pref || 'WebRTC';
+    pref = str || 'WebRTC';
+    // from remote server
+    var ins = {};
+    var outs = {};
+    var inputs = [];
+    var outputs = [];
+
     chan.addEventListener('open', function(evt) {
       _send(self, _info(self));
     });
@@ -51,19 +54,59 @@
       if (channel.label != 'MIDI') return;
       channel.addEventListener('close', function() {
         var i;
-        for (i = 0; i < self.rinputs.length; i++) {
-          self.rins[self.rinputs[i]].disconnect();
-          JZZ.removeMidiIn(self.pref + ' - ' + self.rinputs[i]);
+        for (i = 0; i < inputs.length; i++) {
+          ins[inputs[i]].disconnect();
+          JZZ.removeMidiIn(pref + ' - ' + inputs[i]);
         }
-        for (i = 0; i < self.routputs.length; i++) {
-          self.routs[self.routputs[i]].disconnect();
-          JZZ.removeMidiOut(self.pref + ' - ' + self.routputs[i]);
+        for (i = 0; i < outputs.length; i++) {
+          outs[outputs[i]].disconnect();
+          JZZ.removeMidiOut(pref + ' - ' + outputs[i]);
         }
-        self.rins = {}; self.routs = {};
-        self.rinputs = []; self.routputs = [];
+        ins = {}; outs = {};
+        inputs = []; outputs = [];
       });
       channel.addEventListener('message', function(evt) {
         console.log(evt.data);
+        try {
+          var x = JSON.parse(evt.data);
+          if (x.info) {
+            var i, d, w;
+            d = _diff(x.info.inputs, inputs);
+            for (i = 0; i < d[0].length; i++) {
+              w = new JZZ.Widget();
+              ins[d[0][i]] = w;
+              JZZ.addMidiIn(pref + ' - ' + d[0][i], w);
+            }
+            for (i = 0; i < d[1].length; i++) {
+              ins[d[1][i]].disconnect();
+              delete ins[d[1][i]];
+              JZZ.removeMidiIn(pref + ' - ' + d[1][i]);
+            }
+            d = _diff(x.info.outputs, outputs);
+            for (i = 0; i < d[0].length; i++) {
+              w = new JZZ.Widget({ _receive: _onmsg(channel, d[0][i]) });
+              outs[d[0][i]] = w;
+              JZZ.addMidiOut(pref + ' - ' + d[0][i], w);
+            }
+            for (i = 0; i < d[1].length; i++) {
+              outs[d[1][i]].disconnect();
+              delete outs[d[1][i]];
+              JZZ.removeMidiOut(pref + ' - ' + d[1][i]);
+            }
+            inputs = x.info.inputs;
+            outputs = x.info.outputs;
+            if (start) {
+              start = false;
+              self._resume();
+            }
+          }
+          else if (x.midi) {
+            if (ins[x.id]) ins[x.id].send(_decode(x.midi));
+          }
+        }
+        catch(e) {
+          console.error(e.message);
+        }
       });
     });
   };
@@ -105,16 +148,6 @@
       _send(this, _info(this));
     }
   };
-  function _add(a, x) {
-    for (var n = 0; n < a.length; n++) if (a[n] == x) return a;
-    a.push(x);
-    return a;
-  }
-  function _remove(a, x) {
-    var v = [];
-    for (var n = 0; n < a.length; n++) if (a[n] != x) v.push(x);
-    return v;
-  }
   function _info(self) {
     return JSON.stringify({ info: { inputs: self.inputs, outputs: self.outputs }});
   }
@@ -136,6 +169,11 @@
     for (i = 0; i < a.length; i++) if (!b.includes(a[i])) aa.push(a[i]);
     for (i = 0; i < b.length; i++) if (!a.includes(b[i])) bb.push(b[i]);
     return [aa, bb];
+  }
+  function _onmsg(chan, name) {
+    return function(msg) {
+      chan.send(JSON.stringify({ id: name, midi: _encode(msg) }));
+    };
   }
 
   JZZ.RTC = RTC;
