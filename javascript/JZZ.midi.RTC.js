@@ -50,7 +50,7 @@
       catch(e) {/**/}
     });
     rtc.addEventListener('datachannel', function(evt) {
-      const channel = evt.channel;
+      var channel = evt.channel;
       if (channel.label != 'MIDI') return;
       channel.addEventListener('close', function() {
         var i;
