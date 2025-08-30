@@ -5,3 +5,4 @@ coverage
 Gruntfile.js
 eslint.config.mjs
 *.url
+*.bat
