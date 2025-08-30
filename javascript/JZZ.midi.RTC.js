@@ -27,17 +27,17 @@
     var self = this;
     var chan = rtc.createDataChannel('MIDI');
     this.chan = chan;
-    pref = str || 'WebRTC';
     // from remote server
     var ins = {};
     var outs = {};
     var inputs = [];
     var outputs = [];
+    var pref = str || 'WebRTC';
 
-    chan.addEventListener('open', function(evt) {
+    chan.addEventListener('open', function() {
       _send(self, _info(self));
     });
-    chan.addEventListener('close', function(evt) {
+    chan.addEventListener('close', function() {
       self.chan = undefined;
     });
     chan.addEventListener('message', function(evt) {
@@ -95,10 +95,6 @@
             }
             inputs = x.info.inputs;
             outputs = x.info.outputs;
-            if (start) {
-              start = false;
-              self._resume();
-            }
           }
           else if (x.midi) {
             if (ins[x.id]) ins[x.id].send(_decode(x.midi));

@@ -1,12 +1,16 @@
 # JZZ-midi-RTC
 ## MIDI via WebRTC
 
-coming soon...
-
 [![npm](https://img.shields.io/npm/v/jzz-midi-rtc.svg)](https://www.npmjs.com/package/jzz-midi-rtc)
 [![npm](https://img.shields.io/npm/dt/jzz-midi-rtc.svg)](https://www.npmjs.com/package/jzz-midi-rtc)
 [![build](https://github.com/jazz-soft/JZZ-midi-RTC/actions/workflows/build.yml/badge.svg)](https://github.com/jazz-soft/JZZ-midi-RTC/actions)
 [![Coverage Status](https://coveralls.io/repos/github/jazz-soft/JZZ-midi-RTC/badge.svg)](https://coveralls.io/github/jazz-soft/JZZ-midi-RTC)
+
+This module allows two WebRTC peers communicate with each other's MIDI ports.  
+And YES, these ports are visible from the Web MIDI API!
+
+If, instead, you are building a client-server application,  
+you may want to check https://github.com/jazz-soft/JZZ-midi-WS
 
 ## Usage
 ##### Plain HTML
@@ -47,8 +51,9 @@ MidiRTC.connect(RTCPC);
 ## API
 ```js
 var MidiRTC = new JZZ.RTC();
+MidiRTC.connect(RTCPC);
 ```
-Constructor.
+Constructor and connection. `RTCPC` - a `RTCPeerConnection` object.
 
 ```js
 MidiRTC.addMidiIn(name, port);
@@ -61,3 +66,9 @@ MidiRTC.removeMidiIn(name);
 MidiRTC.removeMidiOut(name);
 ```
 Remove MIDI port.
+
+
+## See also
+- [RTC-MIDI-Test](https://github.com/jazz-soft/RTC-MIDI-Test) - MIDI via WebRTC test / demo
+- [JZZ-midi-WS](https://github.com/jazz-soft/JZZ-midi-WS) - MIDI via WebSockets
+- [JZZ](https://github.com/jazz-soft/JZZ) - MIDI library for Node.js and web-browsers
