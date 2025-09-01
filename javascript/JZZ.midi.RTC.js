@@ -15,7 +15,18 @@
   /* istanbul ignore next */
   if (JZZ.RTC) return;
 
-  function RTC() {
+  var _names = {};
+  function get_name(name) {
+    if (name == undefined) {
+      name = 'WebRTC';
+      for (var n = 1; _names[name]; n++) name = 'WebRTC' + n;
+    }
+    _names[name] = true;
+    return name;
+  }
+
+  function RTC(name) {
+    this.pref = get_name(name);
     // for remote client
     this.ins = {};
     this.outs = {};
@@ -23,7 +34,7 @@
     this.outputs = [];
   }
 
-  RTC.prototype.connect = function(rtc, str) {
+  RTC.prototype.connect = function(rtc) {
     var self = this;
     var chan = rtc.createDataChannel('MIDI');
     this.chan = chan;
@@ -32,7 +43,6 @@
     var outs = {};
     var inputs = [];
     var outputs = [];
-    var pref = str || 'WebRTC';
 
     chan.addEventListener('open', function() {
       _send(self, _info(self));
@@ -56,11 +66,11 @@
         var i;
         for (i = 0; i < inputs.length; i++) {
           ins[inputs[i]].disconnect();
-          JZZ.removeMidiIn(pref + ' - ' + inputs[i]);
+          JZZ.removeMidiIn(self.pref + ' - ' + inputs[i]);
         }
         for (i = 0; i < outputs.length; i++) {
           outs[outputs[i]].disconnect();
-          JZZ.removeMidiOut(pref + ' - ' + outputs[i]);
+          JZZ.removeMidiOut(self.pref + ' - ' + outputs[i]);
         }
         ins = {}; outs = {};
         inputs = []; outputs = [];
@@ -75,23 +85,23 @@
             for (i = 0; i < d[0].length; i++) {
               w = new JZZ.Widget();
               ins[d[0][i]] = w;
-              JZZ.addMidiIn(pref + ' - ' + d[0][i], w);
+              JZZ.addMidiIn(self.pref + ' - ' + d[0][i], w);
             }
             for (i = 0; i < d[1].length; i++) {
               ins[d[1][i]].disconnect();
               delete ins[d[1][i]];
-              JZZ.removeMidiIn(pref + ' - ' + d[1][i]);
+              JZZ.removeMidiIn(self.pref + ' - ' + d[1][i]);
             }
             d = _diff(x.info.outputs, outputs);
             for (i = 0; i < d[0].length; i++) {
               w = new JZZ.Widget({ _receive: _onmsg(channel, d[0][i]) });
               outs[d[0][i]] = w;
-              JZZ.addMidiOut(pref + ' - ' + d[0][i], w);
+              JZZ.addMidiOut(self.pref + ' - ' + d[0][i], w);
             }
             for (i = 0; i < d[1].length; i++) {
               outs[d[1][i]].disconnect();
               delete outs[d[1][i]];
-              JZZ.removeMidiOut(pref + ' - ' + d[1][i]);
+              JZZ.removeMidiOut(self.pref + ' - ' + d[1][i]);
             }
             inputs = x.info.inputs;
             outputs = x.info.outputs;

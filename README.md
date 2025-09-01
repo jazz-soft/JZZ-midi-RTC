@@ -50,10 +50,21 @@ MidiRTC.connect(RTCPC);
 
 ## API
 ```js
-var MidiRTC = new JZZ.RTC();
+var MidiRTC = new JZZ.RTC(name);
+```
+Constructor. `name` - name to be used as preffix for remote MIDI ports.
+If not set, will be `WebRTC`, `WebRTC1`, `WebRTC2`, etc...
+
+```js
 MidiRTC.connect(RTCPC);
 ```
-Constructor and connection. `RTCPC` - a `RTCPeerConnection` object.
+Connect to WebRTC session. `RTCPC` - a `RTCPeerConnection` object.  
+If the previous WebRTC session was closed, MidiRTC can be connected to another session.
+
+```js
+MidiRTC.close();
+```
+Disconnect and close all remote MIDI ports.
 
 ```js
 MidiRTC.addMidiIn(name, port);
@@ -66,6 +77,8 @@ MidiRTC.removeMidiIn(name);
 MidiRTC.removeMidiOut(name);
 ```
 Remove MIDI port.
+
+`{add/remove}Midi{In/Out}(...)` functions can be called before or after the connection is made.
 
 
 ## See also
