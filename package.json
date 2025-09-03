@@ -14,14 +14,14 @@
   ],
   "author": "jazz-soft (https://jazz-soft.net/)",
   "dependencies": {
-    "jzz": "^1.9.3"
+    "jzz": "^1.9.4"
   },
   "devDependencies": {
     "eslint": "^9.34.0",
     "grunt": "^1.6.1",
     "grunt-contrib-jshint": "^3.2.0",
     "grunt-contrib-uglify": "^5.2.2",
-    "mocha": "^11.7.1",
+    "mocha": "^11.7.2",
     "nyc": "^17.1.0"
   },
   "repository": {
