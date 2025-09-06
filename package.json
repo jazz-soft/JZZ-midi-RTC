@@ -1,6 +1,6 @@
 {
   "name": "jzz-midi-rtc",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "coming soon...",
   "main": "javascript/JZZ.midi.RTC.js",
   "scripts": {
@@ -14,10 +14,10 @@
   ],
   "author": "jazz-soft (https://jazz-soft.net/)",
   "dependencies": {
-    "jzz": "^1.9.4"
+    "jzz": "^1.9.5"
   },
   "devDependencies": {
-    "eslint": "^9.34.0",
+    "eslint": "^9.35.0",
     "grunt": "^1.6.1",
     "grunt-contrib-jshint": "^3.2.0",
     "grunt-contrib-uglify": "^5.2.2",
