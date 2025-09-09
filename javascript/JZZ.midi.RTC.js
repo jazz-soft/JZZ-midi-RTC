@@ -83,7 +83,7 @@
             var i, d, w;
             d = _diff(x.info.inputs, inputs);
             for (i = 0; i < d[0].length; i++) {
-              w = new JZZ.Widget();
+              w = new JZZ.Widget({ _info: { type: 'rtc' } });
               ins[d[0][i]] = w;
               JZZ.addMidiIn(self.pref + ' - ' + d[0][i], w);
             }
@@ -94,7 +94,7 @@
             }
             d = _diff(x.info.outputs, outputs);
             for (i = 0; i < d[0].length; i++) {
-              w = new JZZ.Widget({ _receive: _onmsg(channel, d[0][i]) });
+              w = new JZZ.Widget({ _receive: _onmsg(channel, d[0][i]), _info: { type: 'rtc' } });
               outs[d[0][i]] = w;
               JZZ.addMidiOut(self.pref + ' - ' + d[0][i], w);
             }
