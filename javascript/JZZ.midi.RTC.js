@@ -37,7 +37,6 @@
   RTC.prototype.connect = function(rtc) {
     var self = this;
     var chan = rtc.createDataChannel('MIDI');
-    this.chan = chan;
     // from remote server
     var ins = {};
     var outs = {};
@@ -45,6 +44,7 @@
     var outputs = [];
 
     chan.addEventListener('open', function() {
+      self.chan = chan;
       _send(self, _info(self));
     });
     chan.addEventListener('close', function() {
@@ -76,7 +76,6 @@
         inputs = []; outputs = [];
       });
       channel.addEventListener('message', function(evt) {
-        console.log(evt.data);
         try {
           var x = JSON.parse(evt.data);
           if (x.info) {
