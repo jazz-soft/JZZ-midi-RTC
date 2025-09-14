@@ -25,6 +25,7 @@ Peer.prototype.connect = function(R) {
 Peer.prototype.connected = function() {
   var f, c;
   if (this.EH['datachannel']) for (f of this.EH['datachannel']) for (c of this.CR) f({ channel: c });
+  for (c of this.CL) if (c.EH['open']) for (f of c.EH['open']) f();
 };
 Peer.prototype.createDataChannel = function(lab) {
   var c = new Chan(lab);
@@ -37,7 +38,6 @@ Peer.prototype.createDataChannel = function(lab) {
   return c;
 };
 Peer.prototype.addEventListener = function(evt, fun) {
-  // console.log('Peer.addEventListener', evt, fun);
   if (!this.EH[evt]) this.EH[evt] = [];
   this.EH[evt].push(fun);
 };
@@ -48,9 +48,14 @@ function Chan(lab) {
   this.other = undefined;
 }
 Chan.prototype.addEventListener = function(evt, fun) {
-  // console.log('Chan.addEventListener', evt, fun);
   if (!this.EH[evt]) this.EH[evt] = [];
   this.EH[evt].push(fun);
+};
+Chan.prototype.send = function(msg) {
+  var f;
+  if (this.other && this.other.EH['message']) {
+    for (f of this.other.EH['message']) f({ data: msg });
+  }
 };
 
 describe('WebRTC', function() {
@@ -60,6 +65,7 @@ describe('WebRTC', function() {
   var RTC3 = new JZZ.RTC();
   var Peer0 = new Peer();
   var Peer1 = new Peer();
+  Peer0.createDataChannel('not MIDI');
 
   it('constructor', function() {
     assert.equal(RTC0.pref, 'WebRTC');
