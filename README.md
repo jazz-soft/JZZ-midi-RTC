@@ -7,7 +7,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/jazz-soft/JZZ-midi-RTC/badge.svg)](https://coveralls.io/github/jazz-soft/JZZ-midi-RTC)
 
 This module allows two WebRTC peers communicate with each other's MIDI ports.  
-And YES, these ports are visible from the Web MIDI API!
+And YES, these ports are visible from the Web MIDI API!  
+Please see the demo [here](https://github.com/jazz-soft/RTC-MIDI-Test) ...
 
 If, instead, you are building a client-server application,  
 you may want to check https://github.com/jazz-soft/JZZ-midi-WS
