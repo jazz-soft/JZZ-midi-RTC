@@ -44,7 +44,7 @@ require('jzz-midi-rtc')(JZZ);
 var MidiRTC = new JZZ.RTC();
 var RTCPC = new RTCPeerConnection();
 // ...
-// ... boring boilerplate WebRTC code here ...
+// ... boilerplate WebRTC code here ...
 // ...
 MidiRTC.connect(RTCPC);
 ```
@@ -59,7 +59,7 @@ If not set, will be `WebRTC`, `WebRTC1`, `WebRTC2`, etc...
 ```js
 MidiRTC.connect(RTCPC);
 ```
-Connect to WebRTC session. `RTCPC` - a `RTCPeerConnection` object.  
+Connect to a WebRTC session. `RTCPC` - a `RTCPeerConnection` object.  
 If the previous WebRTC session was closed, MidiRTC can be connected to another session.
 
 ```js
